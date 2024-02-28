@@ -1,0 +1,7 @@
+Sources:
+        Baisc SQL commands :
+                            Learning - GFG, W3School, Some Youtube Videos.
+                            Practice - On MySql running on my own local system's Ubuntu Terminal.
+        Advanced Commands : 
+                            LeetCode Practice : https://leetcode.com/harsh_farkiya/
+                            

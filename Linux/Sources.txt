@@ -3,6 +3,7 @@ Sources :
     Shell Scripting :
                     Youtube Video Reference - https://www.youtube.com/watch?v=GtovwKDemnI&ab_channel=edureka%21
                     Practice - Slef Practice On my Ubuntu system
+                    Other Reference - learnshell.org
     Basic commands:
                     GeeksForGeeks, ChatGpt, Google Search 
                     Practice : Self Practice On my Ubuntu System

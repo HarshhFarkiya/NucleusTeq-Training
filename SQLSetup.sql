@@ -1,0 +1,10 @@
+CREATE DATABASE NucleusTeq;
+USE NucleusTeq;
+CREATE TABLE employees_information (id VARCHAR(10) PRIMARY KEY, name VARCHAR(30) NOT NULL,email VARCHAR(40) unique NOT NULL,phone VARCHAR(10),skills VARCHAR(100) NOT NULL,assigned boolean,experience_years int NOT NULL,project_assigned VARCHAR(10));
+CREATE TABLE user_management(id VARCHAR(10) PRIMARY KEY ,email VARCHAR(30) unique NOT NULL, emp_password VARCHAR(50) NOT NULL,user_role VARCHAR(10) NOT NULL,token VARCHAR(255));
+CREATE TABLE managers_information(id VARCHAR(10) PRIMARY KEY, name VARCHAR(30) NOT NULL,email VARCHAR(40) unique NOT NULL,phone VARCHAR(10),projects_assigned VARCHAR(255));
+CREATE TABLE project_information(project_id VARCHAR(10) PRIMARY KEY,project_name VARCHAR(40) NOT NULL,skills_required VARCHAR(255) NOT NULL);
+CREATE TABLE project_assigned(project_id VARCHAR(10) PRIMARY KEY, managers_id VARCHAR(255), employees_id VARCHAR(255), CONSTRAINT FOREIGN KEY (project_id) REFERENCES project_information(project_id));
+CREATE TABLE resources_requested(project_id VARCHAR(10) NOT NULL, managers_id VARCHAR(10) NOT NULL, resource_id VARCHAR(10) NOT NULL);
+CREATE TABLE users_count(employees int, managers int, projects int);
+INSERT INTO users_count VALUES(0,0,0);

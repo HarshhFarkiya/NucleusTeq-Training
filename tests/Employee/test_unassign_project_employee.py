@@ -22,12 +22,10 @@ class TestUnassignProjectEmployee(unittest.TestCase):
         
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(1,)],  # Employee exists
-            [(1, 'project_id')],  # Employee details: assigned to project
-            # [(1,)],  # Project exists
+            [('1', 'project_id')],  # Employee details: assigned to project
+             [(1,)],  # Project exists
         ]
         self.mock_cursor.fetchone.side_effect = [
-            (1, 'project_id'),  # Employee is assigned to project
             ['[1,2,3]'],  # Existing employees in the project
         ]
         
@@ -70,10 +68,11 @@ class TestUnassignProjectEmployee(unittest.TestCase):
         
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(1,)],  # Employee exists
+            [(0, 'project_id')],  # Employee details: assigned to project
+             [(1,)],  # Project exists
         ]
         self.mock_cursor.fetchone.side_effect = [
-            (0, 'project_id'),  # Employee is already unassigned
+            ['[1,2,3]'],  # Existing employees in the project
         ]
 
         response = unassign_project_employee(employee)
@@ -88,12 +87,11 @@ class TestUnassignProjectEmployee(unittest.TestCase):
         
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(1,)],  # Employee exists
-            [],  # Employee details: assigned to project
-            [],  # Project does not exist
+            [('1', 'project_id')],  # Employee details: assigned to project
+             [],  # Project exists
         ]
         self.mock_cursor.fetchone.side_effect = [
-            (1, 'project_id'),  # Employee is assigned to project
+            ['[1,2,3]'],  # Existing employees in the project
         ]
 
         response = unassign_project_employee(employee)

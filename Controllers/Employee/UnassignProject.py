@@ -12,15 +12,14 @@ def unassign_project_employee(employee):
         if not all(param in employee for param in required_parameters):
             return JSONResponse(content={"message": "Missing Parameters"}, status_code=422)
 
-        #Checking Wether employee exists or not
-        cursor_object.execute(f"SELECT * FROM employees_information WHERE id = '{employee['employee_id']}'")
-        check = len(cursor_object.fetchall())
+        #Checking Wether employee exists or not, To check wether employee is previously assigned any project
+        cursor_object.execute(f"SELECT assigned,project_assigned FROM employees_information WHERE id = '{employee['employee_id']}'")
+        data =cursor_object.fetchall()
+        check = len(data)
         if int(check) <= 0:
             return JSONResponse(content={"message":"Employee Doesn't Exists, Please Provide a Valid Employee Id"},status_code=404)
-        
-        #To check wether employee is previously assigned any project
-        cursor_object.execute(f"SELECT assigned,project_assigned FROM employees_information WHERE id = '{employee['employee_id']}'")
-        emp_detail = list(cursor_object.fetchone())
+            
+        emp_detail = list(data[0])
         status = emp_detail[0]
         if status ==0:
             return JSONResponse(content={"message":"Employee is Already Unassigned"},status_code=409)

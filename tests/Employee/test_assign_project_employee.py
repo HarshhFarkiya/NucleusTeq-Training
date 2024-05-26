@@ -25,8 +25,7 @@ class TestAssignProjectEmployee(unittest.TestCase):
         }
 
         mock_connect.return_value = self.mock_connection
-        self.mock_cursor.fetchall.side_effect = [[(1,)],[(1,)],[(1,)],[],[]]
-        self.mock_cursor.fetchone.return_value = ('[]',)
+        self.mock_cursor.fetchall.side_effect = [[(1,)],[('0',)],[('[]',)]]
         response = assign_project_employee(project)
         self.assertEqual(response.status_code, 200)
         response_content = json.loads(response.body)

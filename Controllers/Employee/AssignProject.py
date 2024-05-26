@@ -21,31 +21,22 @@ def assign_project_employee(project):
             return JSONResponse(content={"message":"Project Doesn't Exists, Please Provide a Valid Active Project Id"},status_code=404)
 
         
-        #To check wether the employee exists or not
-        cursor_object.execute(f"SELECT * FROM employees_information WHERE id = '{project['employee_id']}'")
-        check = len(cursor_object.fetchall())
+        #To check wether the employee exists or not and assigned or not
+        cursor_object.execute(f"SELECT assigned FROM employees_information WHERE id='{project['employee_id']}'")
+        data = cursor_object.fetchall()
+        check = len(data)
         if int(check) <= 0:
             return JSONResponse(content={"message":"Employee Doesn't Exists, Please Provide a Valid Employee Id"},status_code=404)
-
-        
-        #To check wether the employee already assigned to another project or not
-        cursor_object.execute(f"SELECT * FROM employees_information WHERE id='{project['employee_id']}' AND assigned=1")
-        check = len(cursor_object.fetchall())
-        print(cursor_object.fetchall())
-        if int(check) > 0:
+        elif int(data[0][0]) == 1:
             return JSONResponse(content={"message":"Employee is already assigned a project"},status_code=200)
-
-
-        #To check wether the manager exists or not for the project
-        cursor_object.execute(f"SELECT * FROM project_assigned WHERE project_id = '{project['project_id']}' AND managers_id IS NOT NULL")
-        check = len(cursor_object.fetchall())
+        
+        #To check wether the manager exists or not for the project, Fetcing list of all the previous employees and adding the new employee in the list
+        cursor_object.execute(f"SELECT employees_id FROM project_assigned WHERE project_id = '{project['project_id']}' AND managers_id IS NOT NULL")
+        data = cursor_object.fetchall()
+        check = len(data)
         if int(check) <= 0:
             return JSONResponse(content={'message': 'Unable To Assigned Employee, Manager Doesnt Exists'},status_code=200)
-
-
-        #Fetcing list of all the previous employees and adding the new employee in the list
-        cursor_object.execute(f"SELECT employees_id FROM project_assigned WHERE project_id='{project['project_id']}'")
-        prev_employees_result = cursor_object.fetchone()
+        prev_employees_result = data[0]
         if prev_employees_result is not None:
             prev_employees = prev_employees_result[0]
             if prev_employees:

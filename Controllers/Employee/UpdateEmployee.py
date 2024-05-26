@@ -1,6 +1,8 @@
 from ConnectSql import connect, disconnect
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from Models.Employee.EmployeeModel import Employee,validate_employee_data;
+
 
 def update_employee_information(employee):
     #Connection Creation With SQL
@@ -16,9 +18,14 @@ def update_employee_information(employee):
         cursor_object.execute(f"SELECT * FROM employees_information WHERE id='{employee['employee_id']}'")
         check = cursor_object.fetchall()
         if len(check)<=0 :
-            return f"{{'message' : 'Employee Id doesn't exists'}}"
+            return JSONResponse(content={'message' : 'Employee Id doesnt exists'},status_code=404)
+        
+        new_employee = Employee(id=employee['employee_id'],name = employee['name'], email=employee['email'], phone = employee['phone'],skills=employee['skills'],experience_years=employee['experience_years'])
+        if validate_employee_data(employee['name'],employee['email'],employee['phone'],employee['skills'],"") == "Input data exceeds allowed length":
+            return JSONResponse(content={'message': 'Input data exceeds allowed length'},status_code=422)
+
         #If employee exists then update the employee details
-        cursor_object.execute(f"UPDATE employees_information SET name=%s,email=%s,phone=%s,skills=%s WHERE id=%s",(new_employee_inforamtion['name'],new_employee_inforamtion['email'],new_employee_inforamtion['phone'],new_employee_inforamtion['skills'],new_employee_inforamtion['employee_id']))
+        cursor_object.execute(f"UPDATE employees_information SET name=%s,email=%s,phone=%s,skills=%s WHERE id=%s",(new_employee.name,new_employee.email,new_employee.phone,new_employee.skills,new_employee.id))
         connection.commit()
         return JSONResponse(content={'message': 'Profile Updated successfully'},status_code=200)
     except Exception as e: 

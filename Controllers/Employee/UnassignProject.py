@@ -21,7 +21,6 @@ def unassign_project_employee(employee):
         #To check wether employee is previously assigned any project
         cursor_object.execute(f"SELECT assigned,project_assigned FROM employees_information WHERE id = '{employee['employee_id']}'")
         emp_detail = list(cursor_object.fetchone())
-        print(emp_detail)
         status = emp_detail[0]
         if status ==0:
             return JSONResponse(content={"message":"Employee is Already Unassigned"},status_code=409)

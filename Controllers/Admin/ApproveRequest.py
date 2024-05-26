@@ -38,7 +38,6 @@ def approve_request(project):
         #Check wether employee is already assigned or not
         cursor_object.execute(f"SELECT * FROM employees_information WHERE id='{project['resource_id']}' AND assigned=1")
         check = len(cursor_object.fetchall())
-        print(cursor_object.fetchall())
         if int(check) > 0:
             return JSONResponse(content={"message": "Employee Already Assgined"}, status_code=200)
 

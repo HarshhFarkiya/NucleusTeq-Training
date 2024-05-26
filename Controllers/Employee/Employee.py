@@ -1,4 +1,4 @@
-from Models.Employee.EmployeeModel import Employee;
+from Models.Employee.EmployeeModel import Employee,validate_employee_data;
 from ConnectSql import connect, disconnect
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -31,6 +31,8 @@ def add_employee(employee):
 
         #Creating new employee object from the Employee Model
         new_employee = Employee(id=emp_id,name = employee['name'], email=employee['email'], phone = employee['phone'],skills=employee['skills'],assigned=emp_status,experience_years=employee['experience_years'],project_assigned="")
+        if validate_employee_data(new_employee.name,new_employee.email,new_employee.phone,new_employee.skills,new_employee.project_assigned) == "Input data exceeds allowed length":
+            return JSONResponse(content={'message': 'Input data exceeds allowed length'},status_code=422)
 
         #Adding the new employee in the employees_information table
         cursor_object.execute(f"INSERT INTO employees_information VALUES ('EMP{new_employee.id}', '{new_employee.name}', '{new_employee.email}', '{new_employee.phone}', '{new_employee.skills}', {new_employee.assigned}, {new_employee.experience_years} , '{new_employee.project_assigned}')")

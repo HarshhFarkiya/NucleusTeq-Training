@@ -1,4 +1,4 @@
-from Models.Manager.ManagerModel import Manager;
+from Models.Manager.ManagerModel import Manager,validate_manager_data;
 from ConnectSql import connect, disconnect
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -12,6 +12,10 @@ def add_manager(manager):
         required_parameters = ['email','phone','name']
         if not all(param in manager for param in required_parameters):
             return JSONResponse(content={"message": "Missing Parameters"}, status_code=422)
+
+        #Validating new manager
+        if validate_manager_data(manager['name'],manager['email'],manager['phone'])=="Input data exceeds allowed length":
+            return JSONResponse(content={'message': 'Input data exceeds allowed length'},status_code=422)
 
         #Fetching the id for new manager to be add
         cursor_object.execute("SELECT managers FROM users_count")

@@ -1,4 +1,4 @@
-from Models.Project.ProjectModel import Project;
+from Models.Project.ProjectModel import Project,validate_project_data;
 from ConnectSql import connect, disconnect
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -12,7 +12,8 @@ def add_project(project):
         if not all(param in project for param in required_parameters):
             return JSONResponse(content={"message": "Missing Parameters"}, status_code=422)
 
-        
+        if validate_project_data(project['project_name'],project['skills_required'])=="Input data exceeds allowed length":
+            return JSONResponse(content={'message': 'Input data exceeds allowed length'},status_code=422)
         #Query to find the new project id
         cursor_object.execute("SELECT projects FROM users_count")
         result = cursor_object.fetchone()

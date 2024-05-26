@@ -50,7 +50,7 @@ def request_resource(request):
         check = cursor_object.fetchall()
 
         #Check the requests is already exists and active for that resource id and manager id
-        if len(check)>1:
+        if len(check)>=1:
             for req in check:
                 if req[0]==0:
                     return JSONResponse(content={'message': 'Request Exists'},status_code=200)

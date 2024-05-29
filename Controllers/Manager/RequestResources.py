@@ -27,10 +27,14 @@ def request_resource(request):
             return JSONResponse(content={'message': 'Invalid project id'},status_code=404)
 
         #Check the resource id is valid or not
-        cursor_object.execute(f"SELECT * FROM employees_information WHERE id='{resource_id}'")
-        check=cursor_object.fetchall()
-        if len(check)<=0:
+        cursor_object.execute(f"SELECT project_assigned FROM employees_information WHERE id='{resource_id}'")
+        data=cursor_object.fetchall()
+        if len(data)<=0:
             return JSONResponse(content={'message': 'Invalid resource id'},status_code=404)
+        #Check the employee is already assigned to the project
+        check=data[0]
+        if check[0] == project_id:
+             return JSONResponse(content={'message': 'Resource Already Present'},status_code=200)
         #Check Wehter Manager is assigned to that project or not
         cursor_object.execute(f"SELECT managers_id FROM project_assigned WHERE project_id='{request['project_id']}'")
         prev_managers_result = cursor_object.fetchone()
@@ -55,11 +59,6 @@ def request_resource(request):
                 if req[0]==0:
                     return JSONResponse(content={'message': 'Request Exists'},status_code=200)
 
-        #Check the employee is already assigned to the project
-        cursor_object.execute(f"SELECT project_assigned FROM employees_information WHERE id='{resource_id}'")
-        check=cursor_object.fetchone()
-        if check[0] == project_id:
-             return JSONResponse(content={'message': 'Resource Already Present'},status_code=200)
 
         #If not then make a request 
         cursor_object.execute(f"INSERT INTO resources_requested VALUES(%s,%s,%s,%s)",(project_id,id,resource_id,0))

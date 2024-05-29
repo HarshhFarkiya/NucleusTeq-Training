@@ -177,7 +177,7 @@ class TestRequestResource(unittest.TestCase):
         self.mock_cursor.fetchall.side_effect = [
             [(request_data['manager_id'],)],  # Manager exists
             [(request_data['project_id'],)],  # Project exists
-            [(request_data['resource_id'],)],  # Resource exists
+            [(request_data['project_id'],)],  # Resource exists
             [],  # existing requests
             [(request_data['project_id'],)],  # Resource already assigned to the project
         ]

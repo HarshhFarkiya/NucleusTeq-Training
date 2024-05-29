@@ -23,11 +23,10 @@ class TestAssignProjectManage(unittest.TestCase):
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
             [(1,)],  # Project exists
-            [(1,)],  # Manager exists
+            [(None,)], # No previous projects for the manager
         ]
         self.mock_cursor.fetchone.side_effect = [
             None,  # No previous managers
-            None,  # No previous projects for the manager
         ]
 
         response = assign_project_manager(project)
@@ -86,11 +85,10 @@ class TestAssignProjectManage(unittest.TestCase):
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
             [(1,)],  # Project exists
-            [(1,)],  # Manager exists
+            [('[2,3]',)],  # Project exists
         ]
         self.mock_cursor.fetchone.side_effect = [
             ['[1,2,3]'],  # Previous managers include MNG1
-            ['[1,2,3]'],
         ]
 
         response = assign_project_manager(project)

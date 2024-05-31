@@ -28,16 +28,13 @@ def auth_user(UserId, password):
         cursor_object = connection.cursor()
 
         # Check if the user exists
-        query = f"SELECT COUNT(*) FROM user_management WHERE email='{UserId}'"
-        cursor_object.execute(query)
-        result = cursor_object.fetchall()
-        if result[0][0] == 0:
-            return JSONResponse(content={"message":"User Doesn't Exist"}, status_code=404)
-        
-        # Check if the password is correct
         query = f"SELECT user_role,emp_password,id FROM user_management WHERE email='{UserId}'"
         cursor_object.execute(query)
-        result = cursor_object.fetchall()[0]
+        data = cursor_object.fetchall()
+        if len(data) <= 0:
+            return JSONResponse(content={"message":"User Doesn't Exist"}, status_code=404)
+        # Check if the password is correct
+        result = data[0]
         hashed_password = result[1]
         if bcrypt.checkpw(password.encode(), hashed_password.encode()):
             #If password is correct then we create a access token and assign it to the user

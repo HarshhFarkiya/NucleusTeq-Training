@@ -28,14 +28,13 @@ class TestAuthUser(unittest.TestCase):
 
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(1,)],  # User exists
-            [('admin', hashed_password, 'USER123')],  # Correct password
+            [('admin', hashed_password, 'User123'),],  # User exists
         ]
 
         response = auth_user(UserId, password)
         self.assertEqual(response.status_code, 200)
         response_content = json.loads(response.body)
-        self.assertEqual(response_content['user_id'], 'USER123')
+        self.assertEqual(response_content['user_id'], 'User123')
         self.assertEqual(response_content['role'], 'admin')
         self.assertIn('token', response_content)
 
@@ -47,7 +46,7 @@ class TestAuthUser(unittest.TestCase):
 
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(0,)],  # User doesn't exist
+            [],  # User doesn't exist
         ]
 
         response = auth_user(UserId, password)
@@ -64,7 +63,6 @@ class TestAuthUser(unittest.TestCase):
 
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(1,)],  # User exists
             [('admin', hashed_password, 'USER123')],  # Incorrect password
         ]
 

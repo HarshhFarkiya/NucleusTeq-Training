@@ -23,10 +23,10 @@ class TestUnassignProjectManager(unittest.TestCase):
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
             [(1,)],  # Manager exists
-            [(1,)],  # Project exists
+            [(json.dumps(['101']),)],  # Project exists
         ]
         self.mock_cursor.fetchone.side_effect = [
-            (json.dumps(['1']),),  # Managers assigned to project
+           
             (json.dumps(['101']),)  # Projects assigned to manager
         ]
 
@@ -54,7 +54,8 @@ class TestUnassignProjectManager(unittest.TestCase):
         
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [],  # Manager does not exist
+            [(1,)],  # Manager does not exist,
+            []
         ]
 
         response = unassign_project_manager(manager)
@@ -65,12 +66,12 @@ class TestUnassignProjectManager(unittest.TestCase):
     @patch('Controllers.Manager.UnassignProject.connect')
     @patch('Controllers.Manager.UnassignProject.disconnect')
     def test_unassign_project_manager_invalid_project_id(self, mock_disconnect, mock_connect):
-        manager = {'manager_id': '1', 'project_id': '999'}
+        manager = {'manager_id': 1, 'project_id': '999'}
         
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
-            [(1,)],  # Manager exists
-            []  # Project does not exist
+           [],  # Manager exists
+           [(json.dumps(['999']),)],  # Project exists
         ]
 
         response = unassign_project_manager(manager)
@@ -86,7 +87,7 @@ class TestUnassignProjectManager(unittest.TestCase):
         mock_connect.return_value = self.mock_connection
         self.mock_cursor.fetchall.side_effect = [
             [(1,)],  # Manager exists
-            [(1,)],  # Project exists
+            [(json.dumps(['102']),)],  # Project exists
         ]
         self.mock_cursor.fetchone.side_effect = [
             (json.dumps(['2']),),  # Managers assigned to project (manager '1' not in list)

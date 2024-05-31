@@ -19,7 +19,7 @@ class TestApproveRequest(unittest.TestCase):
     @patch('Controllers.Admin.ApproveRequest.disconnect')  # Replace 'Controllers.Admin.ApproveRequest' with the actual module name
     def test_approve_request_success(self, mock_disconnect, mock_connect):
         project = {
-            'manager_id': 'MGR1',
+            'manager_id': '1',
             'project_id': 'PRJ1',
             'resource_id': 'EMP1'
         }
@@ -28,8 +28,8 @@ class TestApproveRequest(unittest.TestCase):
         self.mock_cursor.fetchall.side_effect = [
             [(1,)],  # Request exists
             [(1,)],  # Project exists
-            [(1,)],  # Employee exists
-            [],      # Employee not assigned
+            [(0,)],  # Employee exists
+            [('[1]',)],      # Employee not assigned
             [(1,)],  # Manager exists for the project
         ]
         self.mock_cursor.fetchone.side_effect = [
@@ -151,9 +151,8 @@ class TestApproveRequest(unittest.TestCase):
         self.mock_cursor.fetchall.side_effect = [
             [(1,)],  # Request exists
             [(1,)],  # Project exists
-            [(1,)],  # Employee exists
+            [(0,)],  # Employee exists
             [],      # Employee not assigned
-            [],      # Manager does not exist for the project
         ]
 
         response = approve_request(project)

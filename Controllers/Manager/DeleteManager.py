@@ -13,7 +13,7 @@ def delete_manager(id):
         emp = cursor_object.fetchall()
         check=len(emp)
         if check<=0:
-            return JSONResponse(content={"message": "manager Doesnt Exists"}, status_code=404)
+            return JSONResponse(content={"message": "Manager Doesnt Exists"}, status_code=404)
 
         #Check wehter employee is assigned to any project or not
         status=emp[0][4]
@@ -21,7 +21,7 @@ def delete_manager(id):
             return JSONResponse(content={"message": "manager already assigned to a project, Unassign before delete the user"}, status_code=200)
 
         #If not then delete the manager
-        cursor_object.execute(f"DELETE FROM managers_information WHERE id='{id}'")
+        cursor_object.execute(f"DELETE FROM managers_infoFetchingrmation WHERE id='{id}'")
         cursor_object.execute(f"DELETE FROM user_management WHERE id='{id}'")
         connection.commit()
         return JSONResponse(content={"message": "manager Deleted Successfully"}, status_code=200)

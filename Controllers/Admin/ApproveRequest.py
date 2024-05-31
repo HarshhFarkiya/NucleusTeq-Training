@@ -29,29 +29,27 @@ def approve_request(project):
 
 
         #To Check wether the employee/resoure id is valid or not
-        cursor_object.execute(f"SELECT * FROM employees_information WHERE id = '{project['resource_id']}'")
-        check = len(cursor_object.fetchall())
+        cursor_object.execute(f"SELECT assigned FROM employees_information WHERE id = '{project['resource_id']}'")
+        data=cursor_object.fetchall()
+        check = len(data)
         if int(check) <= 0:
             return JSONResponse(content={"message": "Employee Doesn't Exists, Please Provide a Valid Employee Id"}, status_code=404)
 
-        
         #Check wether employee is already assigned or not
-        cursor_object.execute(f"SELECT * FROM employees_information WHERE id='{project['resource_id']}' AND assigned=1")
-        check = len(cursor_object.fetchall())
-        if int(check) > 0:
+        check = data[0][0]
+        if int(check) ==1:
             return JSONResponse(content={"message": "Employee Already Assgined"}, status_code=200)
 
 
         #Check wether manager exists or not for the project            
-        cursor_object.execute(f"SELECT * FROM project_assigned WHERE project_id = '{project['project_id']}' AND managers_id IS NOT NULL")
-        check = len(cursor_object.fetchall())
+        cursor_object.execute(f"SELECT employees_id FROM project_assigned WHERE project_id = '{project['project_id']}' AND managers_id IS NOT NULL")
+        data=cursor_object.fetchall()
+        check = len(data)
         if int(check) <= 0:
             return JSONResponse(content={"message": "Unable To Assigned Employee, Manager Doesn't Exists"}, status_code=404)
 
-
-        #Fetching All the previous employees of project and add new employee in the list                
-        cursor_object.execute(f"SELECT employees_id FROM project_assigned WHERE project_id='{project['project_id']}'")
-        prev_employees_result = cursor_object.fetchone()
+        #Check All the previous employees of project and add new employee in the list                
+        prev_employees_result = data[0]
         if prev_employees_result is not None:
             prev_employees = prev_employees_result[0]
             if prev_employees:

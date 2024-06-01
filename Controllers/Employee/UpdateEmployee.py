@@ -4,8 +4,9 @@ from fastapi.responses import JSONResponse
 from Models.Employee.EmployeeModel import Employee,validate_employee_data;
 import logging
 
+
+
 def update_employee_information(employee):
-    #Connection Creation With SQL
     connection = connect()
     cursor_object = connection.cursor()
     try:

@@ -2,6 +2,7 @@ from ConnectSql import connect, disconnect
 import json 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+import logging 
 def unassign_project_employee(employee):
     #Connection Creation With SQL
     connection = connect()
@@ -10,6 +11,7 @@ def unassign_project_employee(employee):
         #checking the required parameteres exists in request or not
         required_parameters = ['employee_id']
         if not all(param in employee for param in required_parameters):
+            logging.error("Missing Parameters")
             return JSONResponse(content={"message": "Missing Parameters"}, status_code=422)
 
         #Checking Wether employee exists or not, To check wether employee is previously assigned any project
@@ -17,11 +19,13 @@ def unassign_project_employee(employee):
         data =cursor_object.fetchall()
         check = len(data)
         if int(check) <= 0:
+            logging.error("Employee Doesn't Exists")
             return JSONResponse(content={"message":"Employee Doesn't Exists, Please Provide a Valid Employee Id"},status_code=404)
             
         emp_detail = list(data[0])
         status = emp_detail[0]
         if status ==0:
+            logging.error("Employees Already Unassigned")
             return JSONResponse(content={"message":"Employee is Already Unassigned"},status_code=409)
         
         #Get the assigned project's Id
@@ -34,6 +38,7 @@ def unassign_project_employee(employee):
         cursor_object.execute(f"SELECT * FROM project_information WHERE project_id = '{project_id}'")
         check = len(cursor_object.fetchall())
         if int(check) <= 0:
+            logging.error("Project Doesn't Exists")
             return JSONResponse(content={"message":"Project Doesn't Exists, Please Provide a Valid Active Project Id"},status_code=404)
 
         #Now remove the employee id from the project_assigned table
@@ -56,9 +61,11 @@ def unassign_project_employee(employee):
         #Updating the employees information to project_assigned table
         cursor_object.execute(f"UPDATE project_assigned SET employees_id = %s WHERE project_id = %s", (new_employees_json, project_id))
         connection.commit()
+        logging.info("Employees Unassigned Successfully")
         return JSONResponse(content={'message': 'Project Unssigned Successfully'},status_code=200)
     except Exception as e: 
         print("Some Error Occured", e)
+        logging.error(e)
         disconnect(connection)
         raise Exception("Internal Server Error",e)
     finally :

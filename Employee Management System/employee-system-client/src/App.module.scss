@@ -1,0 +1,20 @@
+.App {
+  background-color: rgb(29,26,54);
+  color: white;
+  font-size: calc(1rem + 0.5vw);
+  min-height: 100vh;
+  display: flex;
+  // align-items: center;
+  // width: 100vw;
+  justify-content: space-evenly;
+  // background-color: ;
+  .head{
+    padding: 1.2rem 0rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ccc;
+    color: black;
+    border-radius: 10px;
+  }
+}

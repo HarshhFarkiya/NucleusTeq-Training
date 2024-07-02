@@ -1,0 +1,73 @@
+.users{
+    position: fixed;
+    background-color: #fff;
+    border: 1px solid black;    
+    border-radius: 10px;
+    padding: 1rem;
+    .title{
+        font-size: 1.2rem;
+        font-weight: 500;
+        display: flex;
+        p{
+            margin: 0;
+        }
+        img{
+            width: 0.8rem;
+        }
+    }
+    .user{
+        p{
+            font-size: 1rem;
+        }
+        .list{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+}
+
+.projects{
+    .head{
+        text-align: center;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    .functions {
+        margin: 1rem;
+        display: flex;
+        align-items: center;
+    
+        .add {
+          margin: 1rem;
+    
+          img {
+            margin: 0;
+            width: 2rem;
+          }
+        }
+    
+        .delete {
+          img {
+            margin: 0 0.2rem;
+            width: 1.8rem;
+          }
+        }
+    
+        .circle {
+          background-color: #fff;
+          width: fit-content;
+          border-radius: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.2rem;
+        }
+    
+    
+    
+        .circle:hover {
+          cursor: pointer;
+        }
+      }
+}
